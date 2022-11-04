@@ -591,9 +591,11 @@ label {
   background-color: rgba(216, 81, 81, 0.329);
   color: var(--clr-red-200);
   display: flex;
+  justify-content: center;
   padding: 0.25rem 1rem;
   margin-left: 1rem;
   align-items: center;
+  cursor: pointer;
 }
 .stats-container {
   display: grid;
@@ -678,4 +680,44 @@ label {
 }
 .stats-declined > .stat-info > h2 {
   color: var(--clr-red-200);
+}
+.pageBtnContainer {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+
+.pageBtnContainer > button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem;
+
+  min-width: 2.4rem;
+  text-transform: capitalize;
+  border: none;
+}
+.reg-btn {
+  background: var(--clr-grey-100);
+  color: var(--clr-blue-500);
+  font-weight: bold;
+}
+.pageBtnContainer > button:hover {
+  cursor: pointer;
+}
+.pageBtnContainer > :first-child,
+.pageBtnContainer > :last-child {
+  background-color: white;
+  color: var(--clr-blue-400);
+}
+.pageBtnContainer > :first-child {
+  margin-right: 1rem;
+}
+.pageBtnContainer > :last-child {
+  margin-left: 1rem;
+}
+.active-page {
+  color: var(--clr-backround);
+  background: var(--clr-blue-500);
+  font-weight: bold;
 }

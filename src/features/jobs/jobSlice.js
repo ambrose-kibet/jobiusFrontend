@@ -1,8 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import { customFetch, getLocalStorage } from "../../utils";
-import { logout } from "../user/userSlice";
+
 import { getAllJobs, hideLoading, showLoading } from "./alljobsSlice";
+import { checkError } from "../../utils";
 const initialState = {
   isLoading: false,
   position: "",
@@ -27,11 +28,7 @@ export const createJob = createAsyncThunk(
       thunkAPI.dispatch(clearValues());
       return data.job;
     } catch (error) {
-      if (error.response.status === 401) {
-        thunkAPI.dispatch(logout());
-        return thunkAPI.rejectWithValue("Unauthorized logging out..");
-      }
-      return thunkAPI.rejectWithValue(error.response.data.msg);
+      checkError(error, thunkAPI);
     }
   }
 );
@@ -46,11 +43,7 @@ export const editJob = createAsyncThunk(
 
       return data;
     } catch (error) {
-      if (error.response.status === 401) {
-        thunkAPI.dispatch(logout());
-        return thunkAPI.rejectWithValue("Unauthorized logging out..");
-      }
-      return thunkAPI.rejectWithValue(error.response.data.msg);
+      checkError(error, thunkAPI);
     }
   }
 );
@@ -67,11 +60,7 @@ export const deleteJob = createAsyncThunk(
       return data;
     } catch (error) {
       thunkAPI.dispatch(hideLoading());
-      if (error.response.status === 401) {
-        thunkAPI.dispatch(logout());
-        return thunkAPI.rejectWithValue("Unauthorized logging out..");
-      }
-      return thunkAPI.rejectWithValue(error.response.data.msg);
+      checkError(error, thunkAPI);
     }
   }
 );

@@ -1,13 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import { customFetch } from "../../utils";
-import { logout } from "../user/userSlice";
-
+import { checkError } from "../../utils";
 const initialFilterState = {
   search: "",
   searchStatus: "all",
   searchType: "all",
-  sort: "",
+  sort: "latest",
   sortOptions: ["latest", "oldest", "a-z", "z-a"],
 };
 
@@ -24,7 +23,12 @@ const initialState = {
 export const getAllJobs = createAsyncThunk(
   "allJobs/getAlljos",
   async (_, thunkAPI) => {
-    let url = "/jobs";
+    const { page, search, searchType, searchStatus, sort } =
+      thunkAPI.getState().allJobs;
+    let url = `/jobs?page=${page}&status=${searchStatus}&type=${searchType}&sort=${sort}`;
+    if (search) {
+      url = url + `&search=${search}`;
+    }
     try {
       const { data } = await customFetch.get(url, {
         withCredentials: true,
@@ -32,11 +36,7 @@ export const getAllJobs = createAsyncThunk(
 
       return data;
     } catch (error) {
-      if (error.response.status === 401) {
-        thunkAPI.dispatch(logout());
-        return thunkAPI.rejectWithValue("Unauthorzed! logging out..");
-      }
-      return thunkAPI.rejectWithValue(error.response.data.msg);
+      checkError(error, thunkAPI);
     }
   }
 );
@@ -50,11 +50,7 @@ export const showStats = createAsyncThunk(
 
       return data;
     } catch (error) {
-      if (error.response.status === 401) {
-        thunkAPI.dispatch(logout());
-        return thunkAPI.rejectWithValue("Unauthorzed! logging out..");
-      }
-      return thunkAPI.rejectWithValue(error.response.data.msg);
+      checkError(error, thunkAPI);
     }
   }
 );
@@ -67,6 +63,19 @@ const allJobsSlice = createSlice({
     },
     showLoading: (state) => {
       state.isLoading = true;
+    },
+    handleInput: (state, { payload: { name, value } }) => {
+      state.page = 1;
+      state[name] = value;
+    },
+    clearFilters: (state) => {
+      return { ...state, ...initialFilterState };
+    },
+    changePage: (state, { payload }) => {
+      state.page = payload;
+    },
+    clearAlljobState: () => {
+      return initialState;
     },
   },
   extraReducers: {
@@ -103,5 +112,12 @@ const allJobsSlice = createSlice({
     },
   },
 });
-export const { hideLoading, showLoading } = allJobsSlice.actions;
+export const {
+  hideLoading,
+  showLoading,
+  handleInput,
+  clearFilters,
+  changePage,
+  clearAlljobState,
+} = allJobsSlice.actions;
 export default allJobsSlice.reducer;

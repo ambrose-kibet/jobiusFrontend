@@ -11,7 +11,8 @@ const Job = ({
   jobLocation,
   status,
   _id,
-  cratedAt,
+
+  createdAt,
   jobType,
 }) => {
   const dispatch = useDispatch();
@@ -33,7 +34,7 @@ const Job = ({
         </h5>
         <h5>
           <FaRegCalendarAlt />{" "}
-          <span>{moment(cratedAt).format("MMMM Do YYYY")}</span>
+          <span>{moment(createdAt).format("MMMM DD YYYY")}</span>
         </h5>
         <h5>
           <MdWork /> <span>{jobType}</span>

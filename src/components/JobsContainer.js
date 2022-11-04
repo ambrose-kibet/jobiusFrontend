@@ -2,14 +2,26 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllJobs } from "../features/jobs/alljobsSlice";
 import Job from "./Job";
+import PageBtnContainer from "./PageBtnContainer";
 
 const JobsContainer = () => {
   const dispatch = useDispatch();
-  const { jobs, isLoading, totalJobs } = useSelector((store) => store.allJobs);
+  const {
+    jobs,
+    isLoading,
+    page,
+    numOfPages,
+    totalJobs,
+    search,
+    searchStatus,
+    searchType,
+    sort,
+  } = useSelector((store) => store.allJobs);
 
   React.useEffect(() => {
     dispatch(getAllJobs());
-  }, []);
+    // eslint-disable-next-line
+  }, [page, search, searchStatus, searchType, sort]);
   if (isLoading) {
     return (
       <section className="section-control">
@@ -31,7 +43,10 @@ const JobsContainer = () => {
   }
   return (
     <section className="section-control">
-      <h5> {totalJobs} job(s) found</h5>
+      <h5>
+        {" "}
+        {totalJobs} job{jobs.length > 0 && "s"} found
+      </h5>
       {jobs.length > 0 && (
         <div className="jobs-container">
           {jobs.map((item) => (
@@ -39,6 +54,7 @@ const JobsContainer = () => {
           ))}
         </div>
       )}
+      {numOfPages > 1 && <PageBtnContainer />}
     </section>
   );
 };

@@ -5,7 +5,7 @@ import { MdKeyboardArrowDown } from "react-icons/md";
 
 import Logo from "./Logo";
 import { useDispatch, useSelector } from "react-redux";
-import { logout, toggleSidebar } from "../features/user/userSlice";
+import { toggleSidebar, clearStore } from "../features/user/userSlice";
 const Navbar = () => {
   const [openLogout, setopenLogout] = useState(false);
   const { isLoading, user } = useSelector((store) => store.user);
@@ -42,7 +42,7 @@ const Navbar = () => {
             openLogout ? "btn logout-btn show-logout" : "btn logout-btn"
           }
           disabled={isLoading}
-          onClick={() => dispatch(logout())}
+          onClick={() => dispatch(clearStore())}
         >
           logout
         </button>

@@ -7,6 +7,8 @@ import {
   removeLocalStorage,
   setLocalStorage,
 } from "../../utils";
+import { clearAlljobState } from "../jobs/alljobsSlice";
+import { clearValues } from "../jobs/jobSlice";
 const initialState = {
   isLoading: false,
   info: "",
@@ -81,6 +83,19 @@ export const logout = createAsyncThunk("user/logout", async (_, thunkAPI) => {
     return thunkAPI.rejectWithValue(error.response.data.msg);
   }
 });
+export const clearStore = createAsyncThunk(
+  "user/clearStore",
+  async (_, thunkAPI) => {
+    try {
+      thunkAPI.dispatch(logout());
+      thunkAPI.dispatch(clearAlljobState());
+      thunkAPI.dispatch(clearValues());
+      return Promise.resolve();
+    } catch (error) {
+      return Promise.reject();
+    }
+  }
+);
 
 const userSlice = createSlice({
   name: "user",
